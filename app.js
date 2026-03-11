@@ -112,8 +112,36 @@ function deriveTags(title, category) {
   if (category === "JavaScript") tags.add("JavaScript");
   if (category === "React") tags.add("React");
   if (category === "Vue") tags.add("Vue");
-  if (category === "Node & Tooling") tags.add("Node");
-  if (category === "UX & Design") tags.add("UX");
+  if (category === "Node & Tooling") {
+    tags.add("Node");
+    tags.add("Tooling");
+  }
+  if (category === "UX & Design") {
+    tags.add("UX");
+    tags.add("Design");
+  }
+
+  // Ensure every category has at least one clear tag
+  switch (category) {
+    case "CSS & Layout":
+      tags.add("CSS");
+      tags.add("Layout");
+      break;
+    case "Foundations":
+      tags.add("Foundations");
+      break;
+    case "Dev Workflow":
+      tags.add("Workflow");
+      break;
+    case "GraphQL":
+      tags.add("GraphQL");
+      break;
+    case "Other":
+      tags.add("General");
+      break;
+    default:
+      break;
+  }
 
   return Array.from(tags);
 }
