@@ -361,13 +361,61 @@ body::after {
 
 .footer {
   margin-top: 28px;
-  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   font-size: 0.78rem;
   color: var(--text-muted);
 }
 
+.footer-text {
+  margin: 0;
+}
+
 .footer span {
   color: #38bdf8;
+}
+
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: #e5e7eb;
+  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.98));
+  text-decoration: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, background 0.18s ease;
+}
+
+.footer-icon-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(56, 189, 248, 0.9);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.75);
+}
+
+.footer-icon {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 480px) {
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 @keyframes floatBlob1 {
