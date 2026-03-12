@@ -1,41 +1,29 @@
-const rawCertFiles = [
-  "AdvancedResponsiveLayoutswithCSSFlexbox_CertificateOfCompletion.pdf",
-  "Bootstrap3EssentialTraining_CertificateOfCompletion.pdf",
-  "Bootstrap4FirstLook_CertificateOfCompletion.pdf",
-  "BuildingaWebInterfacewithReactjs_CertificateOfCompletion.pdf",
-  "BuildingaWebsitewithNodejsandExpressjs(2014)_CertificateOfCompletion.pdf",
-  "CreatinganOpenSourceJavaScriptLibrary_CertificateOfCompletion.pdf",
-  "CSS-Animation_CertificateOfCompletion.pdf",
-  "DesigntheWeb-StylingaNumberedList_CertificateOfCompletion.pdf",
-  "GraphQL-DataFetchingwithRelay_CertificateOfCompletion.pdf",
-  "HTTP-2-DevelopingforPerformance_CertificateOfCompletion.pdf",
-  "JavaScript-Functions_CertificateOfCompletion.pdf",
-  "JavaScript-Templating_CertificateOfCompletion.pdf",
-  "JavaScriptandAJAX-IntegrationTechniques_CertificateOfCompletion.pdf",
-  "JavaScriptandJSON-IntegrationTechniques_CertificateOfCompletion.pdf",
-  "JavaScriptEssentialTraining(2011)_CertificateOfCompletion.pdf",
-  "LearningBackbonejs_CertificateOfCompletion.pdf",
-  "LearningCSS_CertificateOfCompletion.pdf",
-  "LearningECMAScript6_CertificateOfCompletion.pdf",
-  "LearningGitandGitHub_CertificateOfCompletion.pdf",
-  "LearningJavaScriptDebugging_CertificateOfCompletion.pdf",
-  "LearningNodejs_CertificateOfCompletion.pdf",
-  "LearningNPMtheNodePackageManager_CertificateOfCompletion.pdf",
-  "LearningReactjs_CertificateOfCompletion.pdf",
-  "LearningRedux_CertificateOfCompletion.pdf",
-  "LearningResponsiveDesign_CertificateOfCompletion.pdf",
-  "LearningVuejs_CertificateOfCompletion.pdf",
-  "LearningWebpack1_CertificateOfCompletion.pdf",
-  "ProgrammingFoundations-Fundamentals_CertificateOfCompletion.pdf",
-  "ProgrammingFoundations-Open-SourceLicensing_CertificateOfCompletion.pdf",
-  "React-BuildingLargeApps_CertificateOfCompletion.pdf",
-  "React-Ecosystems_CertificateOfCompletion.pdf",
-  "SassEssentialTraining_CertificateOfCompletion.pdf",
-  "ToolingwithNPMScripts_CertificateOfCompletion.pdf",
-  "UserExperienceforWebDesigners_CertificateOfCompletion.pdf",
-  "UXFoundations-Accessibility_CertificateOfCompletion.pdf",
-  "WebDevelopmentFoundations-Full-StackvsFront-End_CertificateOfCompletion.pdf",
-];
+async function loadCertificationFiles() {
+  try {
+    const response = await fetch("certifications/metadata.json", {
+      cache: "no-cache",
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Failed to load certifications metadata: ${response.status}`,
+      );
+    }
+
+    const data = await response.json();
+    const entries = Array.isArray(data) ? data : data.certificates;
+
+    if (!Array.isArray(entries)) {
+      throw new Error("Unexpected certifications metadata format");
+    }
+
+    return entries
+      .map((entry) => (typeof entry === "string" ? entry : entry && entry.file))
+      .filter(Boolean);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
 
 function deriveTitle(fileName) {
   let title = fileName.replace("_CertificateOfCompletion.pdf", "");
@@ -146,21 +134,6 @@ function deriveTags(title, category) {
   return Array.from(tags);
 }
 
-const certifications = rawCertFiles.map((file) => {
-  const title = deriveTitle(file);
-  const category = deriveCategory(title);
-  const tags = deriveTags(title, category);
-
-  return {
-    id: file,
-    file,
-    title,
-    category,
-    provider: "LinkedIn Learning",
-    tags,
-  };
-});
-
 function buildCategoryCounts(data) {
   const counts = new Map();
   for (const item of data) {
@@ -202,19 +175,22 @@ function renderGrid(container, data) {
 
   if (!data.length) {
     const empty = document.createElement("div");
-    empty.textContent = "No certifications match your filters yet.";
-    empty.style.padding = "16px";
-    empty.style.color = "#9ca3af";
+    empty.textContent =
+      "No certifications match your filters yet. Try a different search or category.";
+    empty.className = "grid-empty";
     container.appendChild(empty);
     return;
   }
 
   data.forEach((cert) => {
-    const card = document.createElement("article");
-    card.className = "card";
-    card.tabIndex = 0;
-
     const linkUrl = `certifications/${encodeURIComponent(cert.file)}`;
+
+    const card = document.createElement("a");
+    card.className = "card";
+    card.href = linkUrl;
+    card.target = "_blank";
+    card.rel = "noopener noreferrer";
+    card.setAttribute("aria-label", `View certificate: ${cert.title}`);
 
     card.innerHTML = `
       <div class="card-header">
@@ -240,18 +216,6 @@ function renderGrid(container, data) {
         </div>
       </div>
     `;
-
-    const openPdf = () => {
-      window.open(linkUrl, "_blank", "noopener");
-    };
-
-    card.addEventListener("click", openPdf);
-    card.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openPdf();
-      }
-    });
 
     container.appendChild(card);
   });
@@ -284,7 +248,7 @@ function applyFilters(data, searchTerm, activeCategory) {
   });
 }
 
-(function init() {
+(async function init() {
   const searchInput = document.getElementById("searchInput");
   const categoryChips = document.getElementById("categoryChips");
   const grid = document.getElementById("certGrid");
@@ -299,6 +263,23 @@ function applyFilters(data, searchTerm, activeCategory) {
   if (footerYear) {
     footerYear.textContent = new Date().getFullYear();
   }
+
+  const rawCertFiles = await loadCertificationFiles();
+
+  const certifications = rawCertFiles.map((file) => {
+    const title = deriveTitle(file);
+    const category = deriveCategory(title);
+    const tags = deriveTags(title, category);
+
+    return {
+      id: file,
+      file,
+      title,
+      category,
+      provider: "LinkedIn Learning",
+      tags,
+    };
+  });
 
   let activeCategory = "All";
   let searchTerm = "";

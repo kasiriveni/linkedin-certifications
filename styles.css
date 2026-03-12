@@ -16,6 +16,25 @@
   --shadow-soft-alt: 0 12px 35px rgba(15, 23, 42, 0.7);
 }
 
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #020617;
+  color: #e5e7eb;
+  border: 1px solid rgba(56, 189, 248, 0.8);
+  font-size: 0.85rem;
+  text-decoration: none;
+  z-index: 100;
+  transition: top 0.18s ease;
+}
+
+.skip-link:focus-visible {
+  top: 12px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -228,15 +247,27 @@ body::after {
 }
 
 .summary {
-  margin: 14px 4px 10px;
+  margin: 16px 4px 12px;
   font-size: 0.82rem;
   color: var(--text-muted);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px 16px;
+  margin-top: 6px;
+}
+
+.grid-empty {
+  grid-column: 1 / -1;
+  padding: 18px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(148, 163, 184, 0.55);
+  background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.9));
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  text-align: center;
 }
 
 .card {
@@ -250,6 +281,8 @@ body::after {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  color: inherit;
+  text-decoration: none;
   transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, background 0.18s ease;
 }
 
