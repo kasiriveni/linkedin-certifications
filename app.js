@@ -289,10 +289,15 @@ function applyFilters(data, searchTerm, activeCategory) {
   const categoryChips = document.getElementById("categoryChips");
   const grid = document.getElementById("certGrid");
   const resultCount = document.getElementById("resultCount");
+  const footerYear = document.getElementById("footerYear");
 
   if (!searchInput || !categoryChips || !grid || !resultCount) {
     console.error("Certification UI root elements missing");
     return;
+  }
+
+  if (footerYear) {
+    footerYear.textContent = new Date().getFullYear();
   }
 
   let activeCategory = "All";

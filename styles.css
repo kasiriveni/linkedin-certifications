@@ -386,6 +386,13 @@ body::after {
   gap: 10px;
 }
 
+.footer-social-label {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
 .footer-icon-link {
   display: inline-flex;
   align-items: center;
@@ -414,7 +421,18 @@ body::after {
 @media (max-width: 480px) {
   .footer {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .footer-text {
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .footer-social {
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -458,18 +476,41 @@ body::after {
   }
 
   .hero {
-    padding: 16px 14px 14px;
+    position: static;
+    padding: 14px 14px 12px;
+    margin-bottom: 18px;
   }
 
   .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
 
   .controls {
-    padding: 12px 12px 10px;
+    padding: 10px 10px 8px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .controls-left,
+  .controls-right {
+    flex: 1 1 100%;
   }
 
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 13px 12px 12px;
+  }
+
+  .card-title {
+    font-size: 0.94rem;
   }
 }
